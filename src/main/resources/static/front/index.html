@@ -1,0 +1,346 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="pragma" content="no-cache"/>
+    <meta http-equiv="content-type" content="no-cache, must-revalidate"/>
+    <meta http-equiv="expires" content="Wed, 26 Feb 1997 08:21:57 GMT"/>
+    <title>首页</title>
+    <link href="css/swiper-5.4.5/swiper.min.css" rel="stylesheet">
+    <link href="css/bootstrap.min.css" rel="stylesheet">
+    <link href="css/my.css" rel="stylesheet">
+    <link href="css/nav.css" rel="stylesheet">
+    <link rel="stylesheet" href="css/nav.css">
+
+</head>
+<body>
+
+<div id="wrapper">
+
+<!--    <div style="background: blanchedalmond;text-align: center;">-->
+<!--        <iframe style="margin-bottom: -10px" width="700" scrolling="no" height="60" frameborder="0" allowtransparency="true" src="http://i.tianqi.com/index.php?c=code&amp;id=12&amp;icon=1&amp;num=5"></iframe>-->
+<!--    </div>-->
+
+    <!-- 头部开始 -->
+    <div style="width: 100%; height: 60px; line-height: 60px; background: rgb(100 152 231)">
+        <div class="container">
+            <div class="row">
+                <div class="col-md-4">
+                    <div style="color: rgb(255,255,255); font-size: 25px;">汽车租赁系统</div>
+                </div>
+                <div class="col-md-4">
+                    <input type="text" style="border: none; height: 20px; width: 80%; padding: 15px 10px; background: #eee; opacity: 0.8;
+                        font-size: 12px;" v-model="searchText" placeholder="请输入汽车名称搜索">
+                    <i style="color: rgb(100 152 231); padding: 8px; background-color: #eee; opacity: 0.8; top: 2px; left: -4px; cursor: pointer;
+                        border-left: 1px solid #ccc" class="glyphicon glyphicon-search" @click="searchGoods(searchText)"></i>
+                </div>
+                <div class="col-md-2">
+                    <span v-if="user.name" style="color: #eee;">
+                        <span style="color: rgb(100 152 231); margin-right: 20px">{{user.name}}</span>
+                        <a style="color: #eee;" href="javascript:void(0)" @click="logout">退出</a>
+                        <a style="color: #eee;" v-if="isCollect" style="margin-left: 10px" href="collectInfo.html">收藏夹</a>
+                    </span>
+                </div>
+                <div class="col-md-2" style="text-align: right">
+                    <a href="/end/page/login.html" target="_blank" style="color: #eee; margin-right: 10px">登录</a>
+                    <a href="/end/page/register.html" target="_blank" style="color: #eee;">注册</a>
+                </div>
+            </div>
+
+        </div>
+    </div>
+    <!-- 导航开始 -->
+    <div class="container" style="margin: 5px auto">
+        <div style="width: 100%; height: 50px; line-height: 50px;">
+            <div class="col-md-12" style="padding: 0">
+                <div class="row">
+                    <ul style="display: flex;">
+                        <li class="nav-item active"><a href="index.html">首页</a></li>
+                        <li class="nav-item"><a href="advertiserInfo.html">通知管理</a></li>
+                        <li class="nav-item"><a href="messageInfo.html">留言板</a></li>
+                        <li class="nav-item"><a href="submitInfo.html">事故检查</a></li>
+                        <li class="nav-item"><a href="richtextInfo.html">政策信息宣传</a></li>
+                        <li class="nav-item"><a href="cartInfo.html">预约单信息</a></li>
+                        <li class="nav-item"><a href="orderInfo.html">订单信息</a></li>
+                        <li class="nav-item"><a href="commentInfo.html">评价信息</a></li>
+
+                        <li class="nav-item"><a href="javascript:void(0)" @click="personalPage">个人信息</a></li>
+                        <li class="nav-item" v-if="isShow"><a href="/end/page/index.html" target="_blank">进入后台系统</a>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- 导航结束 -->
+    <!-- 头部结束 -->
+
+    <!-- 主体开始 -->
+    <div style="width: 100%;" class="beij">
+        <div class="container">
+            <div class="swiper-container">
+                <div class="swiper-wrapper">
+                    <div class="swiper-slide"><img class="carousel-img" src="/front/img/carousel/12.gif"
+                                                   alt=""></div>
+                    <div class="swiper-slide"><img class="carousel-img" src="/front/img/carousel/11.jpg"
+                                                   alt=""></div>
+                </div>
+                <!-- 如果需要分页器 -->
+                <div class="swiper-pagination"></div>
+                <!-- 如果需要导航按钮 -->
+                <div class="swiper-button-prev"></div>
+                <div class="swiper-button-next"></div>
+            </div>
+
+            <div>
+            <!-- 分类汽车 -->
+            <div class="row" style="margin-top: 20px;">
+                <div class="col-md-2">
+                    <div style="color: rgb(100 152 231); font-size: 24px; padding: 10px;"><b>~汽车类型~</b></div>
+                </div>
+                <div class="col-md-10" style="padding: 18px 10px;">
+                    <span style="margin: 0 20px; text-align: center; cursor: pointer; border-radius: 5px;" v-for="(item,index) in typeObjs"
+                          :class="{'active': activeIndex === index}" @click="getIndexAndGoods(item.id, index)">{{item.name}}     <!-- 遍历所有汽车类型-->
+                    </span>
+                </div>
+                <!-- 下边框线 -->
+                <div class="col-md-12">
+                    <div style="border-bottom: 2px solid rgb(100 152 231)"></div>
+                </div>
+            </div>
+            <div class="row" style="padding: 10px 0; margin-bottom: 20px;">
+                <div class="col-md-12">
+                    <ul class="goods-box">
+                        <li v-for="item in goodsList" style="width: 20%; padding: 10px; display: inline-block">
+                            <a :href="'/front/goodsInfo.html?goodsId=' + item.id" target="_blank">
+                                <img :src="item.src" style="width: 100%; height: 200px">
+                                <p style="text-align: center; color: #666; font-size: 12px">{{item.name}}</p>
+                                <div style="text-align: center; color: red; font-size: 12px">￥ {{item.price}}
+                                </div>
+                            </a>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+
+            <!-- 推荐 -->
+            <div class="row">
+                <div class="col-md-12">
+                    <div style="color: rgb(100 152 231); font-size: 24px; padding: 10px; border-bottom: 2px solid rgb(100 152 231)"><b>~推荐~</b></div>
+                    <ul class="goods-box">
+                        <li v-for="item in recommends" style="width: 20%; padding: 10px; display: inline-block">
+                            <a :href="'/front/goodsInfo.html?goodsId=' + item.id" target="_blank">
+                                <img :src="item.src" style="width: 100%; height: 200px">
+                                <p style="text-align: center; color: #666; font-size: 12px">{{item.name}}</p>
+                                <div style="text-align: center; color: red; font-size: 12px">￥ {{item.price}}
+                                </div>
+                            </a>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+            </div>
+            <!-- 主体结束 -->
+        </div>
+    </div>
+    <!-- 主体结束 -->
+</div>
+
+<!--js库文件-->
+<script src="js/jquery-1.10.2.js"></script>
+<script src="js/swiper-5.4.5/swiper.min.js"></script>
+<script src="js/vue2.6.11/axios.js"></script>
+<script src="js/vue2.6.11/vue.min.js"></script>
+<script src="js/my.js"></script>
+
+<script>
+    //图片轮播
+    $(function () {
+        var mySwiper = new Swiper('.swiper-container', {
+            // direction: 'vertical', // 垂直切换选项
+            autoplay: {
+                delay: 5000,
+                disableOnInteraction: false
+            },//可选选项，自动滑动
+            loop: true, // 循环模式选项
+            speed: 2000,
+
+            // 如果需要分页器
+            pagination: {
+                el: '.swiper-pagination',
+                clickable: true
+            },
+
+            // 如果需要前进后退按钮
+            navigation: {
+                nextEl: '.swiper-button-next',
+                prevEl: '.swiper-button-prev',
+            }
+        });
+
+        // 鼠标移入停止自动滚动
+        var $swiperSide = $('.swiper-slide');
+        $swiperSide.mouseenter(function () {
+            mySwiper.autoplay.stop();
+        });
+        // 鼠标移出开始自动滚动
+        $swiperSide.mouseleave(function () {
+            mySwiper.autoplay.start();
+        });
+    });
+
+    new Vue({
+        el: '#wrapper',
+        data: {
+            isCollect: false,
+            activeIndex: 0,
+            typeObjs: [],   //汽车类型
+            goodsList: [],  //货物列表
+            recommends: [],//推荐汽车
+            hots: [],
+            user: {},
+            recommendPage: 1,
+            recommendPages: 1,
+            salesPage: 1,
+            salesPages: 1,
+            isShow: false,
+            searchText: null
+        },
+        created: function () {
+            axios.get('/auth').then(res => {//向后天发送get请求,验证是否已经登录
+                if (res.data.code === '0') {
+                    this.user = res.data.data;
+                    if (this.user.level !== 3) {
+                        this.isShow = true;//如果为true则显示后台管理链接
+                    }
+                }
+            });
+            this.loadRecommends(1);
+            this.loadHots(1);
+
+            axios.get("/typeInfo").then(res => {
+                this.typeObjs = res.data.data;//获取汽车种类对象
+                // console.log(this.typeObjs);
+                // 默认展示第一个分类的数据
+                this.getIndexAndGoods(this.typeObjs[0].id, 0)
+            });
+        },
+        methods: {
+            loadRecommends(pageNum) {//加载推荐防护内容
+                axios.get("/goodsInfo/recommend?pageNum=" + pageNum).then(res => {
+                    if (res.data.code === '0') {
+                        this.recommendPages = Math.ceil(res.data.data.total / 10);  // 默认10个/页
+                        this.recommends = res.data.data.list;
+
+                        this.recommends.forEach(item => {
+                            let imgSrc = '/front/img/goods/default.png';
+                            if (item.fileIds) {
+                                let fileId = JSON.parse(item.fileIds)[0];
+                                imgSrc = '/files/download/' + fileId;
+                            }
+                            item.src = imgSrc;
+                        })
+                    } else {
+                        msg('error', res.data.msg);
+                    }
+                });
+            },
+            loadHots(pageNum) {
+                axios.get("/goodsInfo/sales?pageNum=" + pageNum).then(res => {
+                    if (res.data.code === '0') {
+                        this.salesPages = Math.ceil(res.data.data.total / 10);  // 默认10个/页
+                        this.hots = res.data.data.list;
+
+                        this.hots.forEach(item => {
+                            let imgSrc = '/front/img/goods/default.png';
+                            if (item.fileIds) {
+                                let fileId = JSON.parse(item.fileIds)[0];
+                                imgSrc = '/files/download/' + fileId;
+                            }
+                            item.src = imgSrc;
+                        })
+                    } else {
+                        msg('error', res.data.msg);
+                    }
+                });
+            },
+            getIndexAndGoods(typeId, index) {//typeId为汽车类型ID,
+                this.activeIndex = index;
+                axios.get('/goodsInfo/findByType/' + typeId).then(res => {
+                    if (res.data.code === '0') {
+                        this.goodsList = res.data.data;//获取汽车列表         {"id":1,"name":"鲜肉","description":"这是鲜肉","fileIds":"[1]","price":20.0,"count":199,"sales":31,"hot":5,"typeId":1,"userId":1,"level":1,"discount":0.8,"recommend":"否","typeName":null,"userName":null,"fileList":null,"commentStatus":null,"fileId":"[1]"},{"id":4,"name":"大米食材","description":"这是大米食材","fileIds":"[4]","price":3.0,"count":199,"sales":1,"hot":0,"typeId":1,"userId":1,"level":1,"discount":0.9,"recommend":"是","typeName":null,"userName":null,"fileList":null,"commentStatus":null,"fileId":"[4]"}]}
+                        if (this.goodsList.length > 5) {
+                            this.goodsList = this.goodsList.slice(0, 5);
+
+                        }
+                         // console.log(this.goodsList);
+                        this.goodsList.forEach(item => {
+                            let imgSrc = '/front/img/goods/default.png';
+                            if (item.fileIds) {
+                               // console.log(JSON.parse(item.fileIds));
+                                let fileId = JSON.parse(item.fileIds)[0];
+                                imgSrc = '/files/download/' + fileId;
+                            }
+                            item.src = imgSrc;
+                        })
+                    } else {
+                        msg('error', res.data.msg);
+                    }
+                })
+            },
+            recommend(direct) {
+                if (direct === 'left') {
+                    this.recommendPage = this.recommendPage === 1 ? 1 : (this.recommendPage - 1);
+                } else {
+                    this.recommendPage = (this.recommendPage === this.recommendPages) ? this.recommendPages : (this.recommendPage + 1);
+                }
+                this.loadRecommends(this.recommendPage);
+            },
+            sales(direct) {
+                if (direct === 'left') {
+                    this.salesPage = this.salesPage === 1 ? 1 : (this.salesPage - 1);
+                } else {
+                    this.salesPage = (this.salesPage === this.salesPages) ? this.salesPages : (this.salesPage + 1);
+                }
+                this.loadHots(this.salesPage);
+            },
+            searchGoods(text) {   // 根据关键字查询汽车
+                if (text) {
+                    // 调用接口查询
+                    axios.get('/goodsInfo/searchGoods', {
+                        params: {text: this.searchText}
+                    }).then(res => {
+                        if (res.data.code === '0') {
+                            this.goodsList = res.data.data;
+                            this.goodsList.forEach(item => {
+                                let imgSrc = '/front/img/goods/default.png';
+                                if (item.fileIds) {
+                                    let fileId = JSON.parse(item.fileIds)[0];
+                                    imgSrc = '/files/download/' + fileId;
+                                }
+                                item.src = imgSrc;
+                            });
+                            // 去除分类高亮
+                            this.activeIndex = null
+                        } else {
+                            msg('error', res.data.msg);
+                        }
+                    })
+                }
+            },
+            logout() {
+                axios.get("/logout").then(res => {
+                    if(res.data.code === '0') {
+                        location.href = '/front/index.html';
+                    } else {
+                        msg('error', res.data.msg);
+                    }
+                })
+            }
+
+        }
+    })
+</script>
+</body>
+</html>

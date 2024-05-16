@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.example.dao.SubmitInfoDao">
+
+	<select id="findByUserIdAndLevel" resultType="com.example.vo.SubmitInfoVo">
+		select `submit_info`.* from `submit_info`
+
+		where 1 = 1
+		<if test="name != null and name != ''">
+			and `submit_info`.`userName` = #{name}
+		</if>
+		<if test="level != null and level != 0">
+			and `submit_info`.`level` = #{level}
+		</if>
+		<if test="status == 1">
+            and `submit_info`.`status` != '未提交'
+        </if>
+
+		order by `submit_info`.id
+	</select>
+
+	<select id="findAll" resultType="com.example.vo.SubmitInfoVo">
+		select `submit_info`.*  from `submit_info`
+
+		order by `submit_info`.id
+	</select>
+
+</mapper>

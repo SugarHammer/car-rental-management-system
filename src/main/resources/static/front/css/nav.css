@@ -1,0 +1,42 @@
+.nav-item {
+    flex: 1;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    transition: all 0.5s;
+}
+.nav-item a {
+    color: #333;
+    font-weight: bold;
+}
+
+li.active {
+    /*background-color: #0404B4;*/
+}
+li.active a {
+    color: #13ce66;
+}
+.nav-item:hover {
+    /*border-bottom: 4px solid #9098a7;*/
+    /*color: white;*/
+    /*transition: all 0.2s;*/
+    /*background-color: #0404B4;*/
+    transform:scale(1.2);
+}
+
+.nav-item:hover a{
+    color: #13ce66;
+}
+
+.active {
+    color: red;
+    /*background-color: #0404B4;*/
+}
+a.active {
+    color: blue;
+}
+.beij {
+    background: url("https://img.zcool.cn/community/01cc6a5d8abff9a8012060be96e1b5.jpg@2o.jpg") no-repeat;
+    /*background-size: cover;*/
+    /*background-position-y: center;*/
+}
